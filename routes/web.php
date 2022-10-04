@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TableController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::prefix('kanban-board')->group(function () {
+    Route::get('', [TableController::class, 'index'])->name('kanban-board.index');
+    Route::get('table/{table}', [TableController::class, 'show'])->name('kanban-board.show');
+});
