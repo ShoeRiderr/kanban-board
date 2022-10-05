@@ -15,7 +15,11 @@
               aria-expanded="false"
             ></i>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuColumn">
-              <span class="dropdown-item pointer" data-bs-toggle="modal" :data-bs-target="`#${confirmColumnModalId}`">
+              <span
+                class="dropdown-item pointer"
+                data-bs-toggle="modal"
+                :data-bs-target="`#${confirmColumnModalId}`"
+              >
                 Archive column
               </span>
               <span
@@ -86,16 +90,13 @@
 </template>
 
 <script>
-import Draggable from 'vuedraggable';
-import ConfirmModal from '@/components/ConfirmModal.vue';
-import TaskComponent from '@/components/kanbanBoard/TaskComponent.vue';
-import kanbanBoardStoreMixin from '@/modules/kanbanBoard/mixins/kanbanBoardStoreMixin';
+import { VueDraggableNext } from "vue-draggable-next";
+import ConfirmModal from "@/components/ConfirmModal.vue";
+import TaskComponent from "@/components/kanbanBoard/TaskComponent.vue";
 
 export default {
-  mixins: [kanbanBoardStoreMixin],
-
   components: {
-    Draggable,
+    Draggable: VueDraggableNext,
     ConfirmModal,
     TaskComponent,
   },
@@ -122,40 +123,40 @@ export default {
   data() {
     return {
       taskForm: {
-        name: '',
+        name: "",
       },
       confirmColumnModalId: `confirmColumnModal${this.column.id}`,
-      columnModalId: 'columnModalId',
+      columnModalId: "columnModalId",
       showTaskForm: false,
     };
   },
 
   methods: {
     changeTaskOrder() {
-      this.$emit('changeTaskOrder', this.column.id);
+      this.$emit("changeTaskOrder", this.column.id);
     },
 
     startTask(event) {
-      this.$emit('startTask', event);
+      this.$emit("startTask", event);
     },
 
     stopTask(event) {
-      this.$emit('stopTask', event);
+      this.$emit("stopTask", event);
     },
 
     addTask() {
-      this.$emit('addTask', {
+      this.$emit("addTask", {
         column_id: this.column.id,
         name: this.taskForm.name,
       });
 
       this.taskForm = {
-        name: '',
+        name: "",
       };
     },
 
     archiveTask(id) {
-      this.$emit('archiveTask', id);
+      this.$emit("archiveTask", id);
     },
 
     onShowTaskForm(value) {
@@ -169,38 +170,37 @@ export default {
     },
 
     showEditColumnModal() {
-      this.$emit('showEditColumnModal', {
+      this.$emit("showEditColumnModal", {
         column_id: this.column.id,
         name: this.column.name,
-        is_public: this.column.is_public,
       });
     },
 
     archiveColumn() {
-      this.$emit('archiveColumn', this.column.id);
+      this.$emit("archiveColumn", this.column.id);
     },
 
     addComment(event) {
-      this.$emit('addComment', event);
+      this.$emit("addComment", event);
     },
 
     editComment(event) {
-      this.$emit('editComment', event);
+      this.$emit("editComment", event);
     },
 
     deleteComment(id) {
-      this.$emit('deleteComment', id);
+      this.$emit("deleteComment", id);
     },
 
     addCollaborators(event) {
-      this.$emit('addCollaborators', event);
+      this.$emit("addCollaborators", event);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-div[class^='col-'] {
+div[class^="col-"] {
   block-size: fit-content;
   padding-left: 0;
   padding-right: 0;

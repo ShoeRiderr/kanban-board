@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <kanban-board-tables />
+    <div class="container">
+        <kanban-board-tables />
+    </div>
 @endsection

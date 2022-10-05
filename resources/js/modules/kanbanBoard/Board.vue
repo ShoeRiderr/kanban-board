@@ -75,19 +75,17 @@
 </template>
 <script>
 import { ref } from "vue";
-import Draggable from "vuedraggable";
+import { VueDraggableNext } from "vue-draggable-next";
 import api from "@/api";
 import AvatarItemComponent from "@/components/kanbanBoard/AvatarItemComponent.vue";
 import ColumnComponent from "@/components/kanbanBoard/ColumnComponent.vue";
 import ColumnModalsComponent from "@/components/kanbanBoard/ColumnModalsComponent.vue";
 import TableModalsComponent from "@/components/kanbanBoard/TableModalsComponent.vue";
-import kanbanBoardStoreMixin from "@/modules/kanbanBoard/mixins/kanbanBoardStoreMixin";
+import { kanbanBoard } from "@/store/kanbanBoard";
 
 export default {
-  mixins: [kanbanBoardStoreMixin],
-
   components: {
-    Draggable,
+    Draggable: VueDraggableNext,
     AvatarItemComponent,
     ColumnComponent,
     ColumnModalsComponent,
@@ -103,9 +101,13 @@ export default {
       required: true,
     },
   },
+
   setup() {
     const kanbanBoardStore = kanbanBoard();
     const users = ref([]);
+    const projects = ref([]);
+    const columnModalId = "columnModalId";
+    const columnToEdit = ref({});
 
     window.Echo.channel("tableEvent").listen("TableEvent", (event) => {
       if (event.table.id === kanbanBoardStore.table.id) {
@@ -113,24 +115,12 @@ export default {
       }
     });
 
-    window.Echo.channel("timeEntryStatus").listen("TimeEntryStatus", () => {
-      api.kanbanBoard.table.show(kanbanBoardStore.table.id).then((response) => {
-        kanbanBoardStore.setTable(response.data.data);
-        kanbanBoardStore.setHasStartedTaskStatus(false);
-      });
-    });
-
     return {
       users,
+      projects,
+      columnModalId,
+      columnToEdit,
       kanbanBoardStore,
-    };
-  },
-
-  data() {
-    return {
-      projects: [],
-      columnModalId: "columnModalId",
-      columnToEdit: {},
     };
   },
 
@@ -221,7 +211,7 @@ export default {
           const data = response.data.data;
           this.kanbanBoardStore.setTable(data);
 
-          api.tag.filterByWid(data.workspace.id).then((response) => {
+          api.tag.all().then((response) => {
             this.kanbanBoardStore.setTags(response.data);
           });
         })
@@ -251,12 +241,11 @@ export default {
     },
 
     addColumn(data) {
-      const { is_public, name } = data;
+      const { name } = data;
 
       api.kanbanBoard.column
         .create({
           name,
-          is_public,
           table_id: this.tableId,
         })
         .then(() => {
@@ -279,12 +268,11 @@ export default {
     },
 
     editColumn(data) {
-      const { column_id, is_public, name } = data;
+      const { column_id, name } = data;
 
       api.kanbanBoard.column
         .update(column_id, {
           table_id: this.tableId,
-          is_public,
           name,
         })
         .then(() => {

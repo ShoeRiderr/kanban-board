@@ -8,12 +8,6 @@
             <input id="column_name" type="text" class="form-control" v-model="form.name" />
           </div>
         </div>
-        <div class="col-6 align-self-end">
-          <div class="form-group">
-            <input id="is_public" type="checkbox" class="form-check-input" v-model="form.is_public" />
-            <label for="is_public" class="form-check-label">Is public</label>
-          </div>
-        </div>
       </form>
     </modal-component>
   </div>
@@ -42,7 +36,6 @@ export default {
     return {
       form: {
         name: '',
-        is_public: true,
       },
       modalTitle: 'Add column',
     };
@@ -61,7 +54,6 @@ export default {
 
       this.form = {
         name: '',
-        is_public: true,
       };
     },
   },

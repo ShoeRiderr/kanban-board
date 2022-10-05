@@ -25,7 +25,7 @@
       :close-on-select="false"
       :hide-selected="true"
       :show-labels="false"
-      label="fullname"
+      label="name"
       placeholder="Type to search"
       track-by="id"
     >

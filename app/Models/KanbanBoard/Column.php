@@ -14,6 +14,7 @@ class Column extends Model
     protected $fillable = [
         'name',
         'order',
+        'table_id',
     ];
 
     public function table(): BelongsTo

@@ -28,7 +28,6 @@ class TaskResource extends JsonResource
             'project' => $this->project,
             'collaborators' => UserResource::collection($this->collaborators),
             'files' => $this->files,
-            'production_files' => $this->productionFiles,
             'tags' => $this->tags,
         ];
     }

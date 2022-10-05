@@ -1,11 +1,9 @@
-import kanbanBoardStoreMixin from '@/modules/kanbanBoard/mixins/kanbanBoardStoreMixin';
-import { convertEstimation } from '@/utils/time';
 import { getAll } from '@/enums/imageExtension';
 import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+import { kanbanBoard } from '@/store/kanbanBoard';
 
 export default {
-    mixins: [kanbanBoardStoreMixin],
-
     props: {
         authUser: {
             type: Object,
@@ -17,17 +15,15 @@ export default {
         },
     },
 
+    setup() {
+        const kanbanBoardStore = kanbanBoard();
+
+        return {
+            kanbanBoardStore,
+        };
+    },
     computed: {
-        canStartTask() {
-            return !this.kanbanBoardStore.hasStartedTaskStatus && !this.isOngoing;
-        },
-
-        canStopTask() {
-            return this.kanbanBoardStore.hasStartedTaskStatus && this.isOngoing;
-        },
-
         dueDate() {
-            const isBetween = require('dayjs/plugin/isBetween');
             dayjs.extend(isBetween);
             const { due_date } = this.task;
             const currentDate = dayjs();
@@ -51,49 +47,6 @@ export default {
                           icon: '',
                       },
                   };
-        },
-
-        isOngoing() {
-            if (this.task.ongoing_time_entry) {
-                const result =
-                    Object.keys(this.task.ongoing_time_entry).length > 0 &&
-                    this.task.ongoing_time_entry.uid === this.authUser.id &&
-                    this.task.ongoing_time_entry.task_id === this.task.id;
-
-                if (result) {
-                    this.kanbanBoardStore.setHasStartedTaskStatus(result);
-                }
-                return result;
-            }
-
-            return false;
-        },
-
-        getEstimationStatus() {
-            const { current_task_duration, estimation } = this.task;
-
-            const value = (current_task_duration / estimation) * 100;
-
-            return {
-                value: value > 100 ? 100 : value,
-                progress_bar: value > 100 ? 'progress-red' : 'progress-green',
-                duration_margin: value > 100 ? 85 : value,
-                duration_class: value > 100 ? 'text-danger ml-auto' : 'text-success',
-                estimation_class: value > 100 ? 'progress-bar-estimation' : 'ml-auto',
-            };
-        },
-
-        convertedCurrentTaskDuration() {
-            const { hours, minutes, seconds } = convertEstimation(this.task.current_task_duration);
-
-            return `${hours}:${minutes}:${seconds}h`;
-        },
-
-        setDurationMargin() {
-            const { value, duration_margin } = this.getEstimationStatus;
-            const margin = duration_margin - 15;
-
-            return value < 100 ? `margin-left: ${margin > 0 ? margin : 0}%` : '';
         },
 
         attachedFiles() {

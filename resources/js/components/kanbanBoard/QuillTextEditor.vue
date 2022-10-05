@@ -1,9 +1,15 @@
 <template>
-  <quill-editor v-model="value" :options="editorOption" @ready="onFocus($event)" v-click-outside="onClickOutside" />
+  <quill-editor
+    ref="quill"
+    v-model="value"
+    :options="editorOption"
+    @ready="onFocus($event)"
+    v-click-outside="onClickOutside"
+  />
 </template>
 
 <script>
-import quillMixin from '@/mixins/quillMixin';
+import quillMixin from "@/mixins/quillMixin";
 
 export default {
   mixins: [quillMixin],
@@ -28,24 +34,24 @@ export default {
 
   mounted() {
     if (this.isComment) {
-      let qlToolbar = this.$el.querySelector('.ql-toolbar');
-      qlToolbar.classList.add('d-flex');
+      let qlToolbar = this.$refs.quill.getToolbar();
+      qlToolbar.classList.add("d-flex");
 
-      let fileInput = document.createElement('input');
-      fileInput.setAttribute('type', 'file');
-      fileInput.setAttribute('multiple', true);
-      fileInput.setAttribute('ref', 'files');
-      fileInput.setAttribute('id', 'files');
-      fileInput.className = 'd-none';
-      fileInput.addEventListener('change', () => {
-        this.$emit('addAttachments', this.$el.querySelector('#files').files);
+      let fileInput = document.createElement("input");
+      fileInput.setAttribute("type", "file");
+      fileInput.setAttribute("multiple", true);
+      fileInput.setAttribute("ref", "files");
+      fileInput.setAttribute("id", "files");
+      fileInput.className = "d-none";
+      fileInput.addEventListener("change", () => {
+        this.$emit("addAttachments", document.querySelector("#files").files);
       });
 
-      let attachment = document.createElement('span');
-      attachment.className = 'ql-formats';
+      let attachment = document.createElement("span");
+      attachment.className = "ql-formats";
       attachment.appendChild(fileInput);
 
-      let attachmentButton = document.createElement('button');
+      let attachmentButton = document.createElement("button");
 
       attachmentButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -59,23 +65,23 @@ export default {
                         />
                       </svg>`;
 
-      attachmentButton.setAttribute('type', 'button');
-      attachmentButton.addEventListener('click', () => {
-        this.$el.querySelector('#files').click();
+      attachmentButton.setAttribute("type", "button");
+      attachmentButton.addEventListener("click", () => {
+        document.querySelector("#files").click();
       });
 
       attachment.appendChild(attachmentButton);
 
       qlToolbar.appendChild(attachment);
 
-      let button = document.createElement('button');
-      button.innerText = 'Comment';
-      button.className = 'auto-width btn btn-sm btn-primary ml-auto';
+      let button = document.createElement("button");
+      button.innerText = "Comment";
+      button.className = "auto-width btn btn-sm btn-primary ml-auto";
 
-      button.setAttribute('type', button);
-      button.addEventListener('click', () => {
-        this.$emit('onSave', this.value);
-        this.value = '';
+      button.setAttribute("type", button);
+      button.addEventListener("click", () => {
+        this.$emit("onSave", this.value);
+        this.value = "";
       });
 
       qlToolbar.appendChild(button);
@@ -92,8 +98,8 @@ export default {
       if (this.quillEvent && !this.quillEvent.hasFocus()) {
         const quillFormContainer = this.quillEvent.container.parentNode.parentNode;
 
-        if (quillFormContainer.classList.contains('editor-form')) {
-          this.$emit('hideEditor', this.value);
+        if (quillFormContainer.classList.contains("editor-form")) {
+          this.$emit("hideEditor", this.value);
         }
       }
     },

@@ -6,11 +6,7 @@ export const users = defineStore('users', {
         users: [],
         user: {
             name: '',
-            fullname: '',
-            active: 0,
             email: '',
-            permissions: '',
-            starting_route: '',
             password: '',
             password_confirmation: '',
         },
@@ -31,15 +27,11 @@ export const users = defineStore('users', {
             return axios
                 .get(`/api/users/${id}`)
                 .then((response) => {
-                    const { name, fullname, active, email, permissions, starting_route } = response.data;
+                    const { name, email } = response.data;
 
                     this.user = {
                         name,
-                        fullname,
-                        active,
                         email,
-                        permissions: permissions ? permissions.split(',') : [],
-                        starting_route,
                         password: '',
                         password_confirmation: '',
                     };
