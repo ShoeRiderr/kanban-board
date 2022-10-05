@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\TableController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('clients', ClientController::class);
 Route::apiResource('projects', ProjectController::class);
 Route::apiResource('tags', TagController::class);
+Route::apiResource('users', UserController::class);
 
 Route::prefix('kanban-board')->group(function () {
     Route::apiResource('tables', TableController::class);
