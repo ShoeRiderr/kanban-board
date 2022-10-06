@@ -2,6 +2,6 @@
 
 @section('content')
     <div class=container>
-        <project-form :project="{{ $project }}" />
+        <tag-form />
     </div>
 @endsection

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = '/api/projects';
+const BASE_URL = '/api/clients';
 
 export default {
   all: () => {

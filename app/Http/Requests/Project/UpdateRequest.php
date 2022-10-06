@@ -25,6 +25,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => ['required'],
+            'client_id' => ['required', 'exists:clients,id'],
         ];
     }
 }

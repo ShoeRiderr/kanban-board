@@ -31,10 +31,6 @@
       placeholder="Type to search"
       track-by="id"
     >
-      <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
-      <template slot="selection" slot-scope="{ values, isOpen }">
-        <span class="multiselect__single" v-if="values.length && !isOpen"> {{ values.length }} options selected </span>
-      </template>
     </v-select>
   </div>
 </template>

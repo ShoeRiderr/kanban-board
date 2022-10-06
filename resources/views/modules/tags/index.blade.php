@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class=container>
-        <client-form />
+    <div class="container">
+        <tag-index />
     </div>
 @endsection

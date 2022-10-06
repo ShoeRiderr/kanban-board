@@ -25,10 +25,10 @@ class TaskResource extends JsonResource
             'column' => $this->column,
             'user' => UserResource::make($this->user),
             'comments' => CommentResource::collection($this->comments),
-            'project' => $this->project,
+            'project' => ProjectResource::make($this->project),
             'collaborators' => UserResource::collection($this->collaborators),
             'files' => $this->files,
-            'tags' => $this->tags,
+            'tags' => TagResource::collection($this->tags),
         ];
     }
 }

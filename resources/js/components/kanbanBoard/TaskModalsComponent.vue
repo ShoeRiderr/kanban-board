@@ -46,9 +46,8 @@
                     </div>
                   </span>
                   <v-select v-show="showUserInput" ref="user" v-model="taskForm.user" @close="assignUser"
-                    :options="users" :clear-on-select="false" :close-on-select="false" :show-labels="false" label="name"
+                    :options="users" :clear-on-select="false" :show-labels="false" label="name"
                     placeholder="Type to search" track-by="id">
-                    <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
                   </v-select>
                 </div>
               </div>
@@ -83,9 +82,8 @@
                   </span>
 
                   <v-select v-show="showProjectInput" ref="project" v-model="taskForm.project" @close="assignProject"
-                    :options="projects" :clear-on-select="false" :close-on-select="false" :show-labels="false"
-                    label="name" placeholder="Type to search" track-by="id">
-                    <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
+                    :options="projects" :clear-on-select="false" :show-labels="false" label="name"
+                    placeholder="Type to search" track-by="id">
                   </v-select>
                 </div>
               </div>
@@ -113,12 +111,6 @@
                     :options="kanbanBoardStore.tags" :multiple="true" :group-select="true" :clear-on-select="false"
                     :close-on-select="false" :hide-selected="true" :show-labels="false" label="name"
                     placeholder="Type to search" track-by="id">
-                    <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
-                    <template slot="selection" slot-scope="{ values, isOpen }">
-                      <span class="multiselect__single" v-if="values.length && !isOpen">
-                        {{ values.length }} options selected
-                      </span>
-                    </template>
                   </v-select>
                 </div>
               </div>

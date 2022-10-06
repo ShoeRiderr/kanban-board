@@ -3,6 +3,8 @@
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\TagController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,7 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('clients')->group(function () {
         Route::get('', [ClientController::class, 'index'])->name('clients.index');
         Route::get('create', [ClientController::class, 'create'])->name('clients.create');
-        Route::get('{table}', [ClientController::class, 'edit'])->name('clients.edit');
+        Route::get('{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
     });
     Route::prefix('kanban-board')->group(function () {
         Route::get('', [TableController::class, 'index'])->name('kanban-board.index');
@@ -37,6 +39,11 @@ Route::middleware('auth')->group(function () {
     Route::prefix('projects')->group(function () {
         Route::get('', [ProjectController::class, 'index'])->name('projects.index');
         Route::get('create', [ProjectController::class, 'create'])->name('projects.create');
-        Route::get('{table}', [ProjectController::class, 'edit'])->name('projects.edit');
+        Route::get('{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+    });
+    Route::prefix('tags')->group(function () {
+        Route::get('', [TagController::class, 'index'])->name('tags.index');
+        Route::get('create', [TagController::class, 'create'])->name('tags.create');
+        Route::get('{tag}/edit', [TagController::class, 'edit'])->name('tags.edit');
     });
 });

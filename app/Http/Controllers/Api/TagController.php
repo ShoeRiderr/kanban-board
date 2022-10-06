@@ -5,29 +5,33 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tag\StoreRequest;
 use App\Http\Requests\Tag\UpdateRequest;
+use App\Http\Resources\TagResource;
 use App\Models\Tag;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class TagController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(): JsonResource
     {
-        return response()->json(['data' => Tag::all()]);
+        return TagResource::collection(Tag::all());
     }
 
-    public function store(StoreRequest $request): JsonResponse
+    public function store(StoreRequest $request): JsonResource
     {
-        return response()->json(['data' => Tag::create($request->validated())]);
+        return TagResource::make(Tag::create($request->validated()));
     }
 
-    public function show(Tag $tag): JsonResponse
+    public function show(Tag $tag): JsonResource
     {
-        return response()->json(['data' => $tag]);
+        return TagResource::make($tag);
     }
 
-    public function update(UpdateRequest $request, Tag $tag): JsonResponse
+    public function update(UpdateRequest $request, Tag $tag): JsonResource
     {
-        return response()->json($tag->update($request->validated()));
+        $tag->update($request->validated());
+
+        return TagResource::make($tag);
     }
 
     public function destroy(Tag $tag): JsonResponse

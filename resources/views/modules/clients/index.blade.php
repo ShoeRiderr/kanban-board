@@ -2,6 +2,6 @@
 
 @section('content')
     <div class="container">
-        clients
+        <client-index />
     </div>
 @endsection

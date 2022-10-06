@@ -47,6 +47,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('clients.index') }}">Clients</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('tags.index') }}">Tags</a>
+                            </li>
                         @endauth
                     </ul>
 

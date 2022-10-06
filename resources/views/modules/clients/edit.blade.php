@@ -2,6 +2,6 @@
 
 @section('content')
     <div class=container>
-        client
+        <client-form :client="{{ $client }}" />
     </div>
 @endsection

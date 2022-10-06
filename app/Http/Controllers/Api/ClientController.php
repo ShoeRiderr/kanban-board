@@ -5,33 +5,37 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\StoreRequest;
 use App\Http\Requests\Client\UpdateRequest;
+use App\Http\Resources\ClientResource;
 use App\Models\Client;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClientController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(): JsonResource
     {
-        return response()->json(['data' => Client::all()]);
+        return ClientResource::collection(Client::all());
     }
 
-    public function store(StoreRequest $request): JsonResponse
+    public function store(StoreRequest $request): JsonResource
     {
-        return response()->json(['data' => Client::create($request->validated())]);
+        return ClientResource::make(Client::create($request->validated()));
     }
 
-    public function show(Client $tag): JsonResponse
+    public function show(Client $client): JsonResource
     {
-        return response()->json(['data' => $tag]);
+        return ClientResource::make($client);
     }
 
-    public function update(UpdateRequest $request, Client $tag): JsonResponse
+    public function update(UpdateRequest $request, Client $client): JsonResource
     {
-        return response()->json($tag->update($request->validated()));
+        $client->update($request->validated());
+
+        return ClientResource::make($client);
     }
 
-    public function destroy(Client $tag): JsonResponse
+    public function destroy(Client $client): JsonResponse
     {
-        return response()->json($tag->delete());
+        return response()->json($client->delete());
     }
 }

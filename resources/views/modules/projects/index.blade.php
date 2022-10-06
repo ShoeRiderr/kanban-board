@@ -2,6 +2,6 @@
 
 @section('content')
     <div class="container">
-        projects
+        <project-index />
     </div>
 @endsection

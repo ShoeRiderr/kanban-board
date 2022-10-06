@@ -5,33 +5,37 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\StoreRequest;
 use App\Http\Requests\Project\UpdateRequest;
+use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProjectController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(): JsonResource
     {
-        return response()->json(['data' => Project::all()]);
+        return ProjectResource::collection(Project::all());
     }
 
-    public function store(StoreRequest $request): JsonResponse
+    public function store(StoreRequest $request): JsonResource
     {
-        return response()->json(['data' => Project::create($request->validated())]);
+        return ProjectResource::make(Project::create($request->validated()));
     }
 
-    public function show(Project $tag): JsonResponse
+    public function show(Project $project): JsonResource
     {
-        return response()->json(['data' => $tag]);
+        return ProjectResource::make($project);
     }
 
-    public function update(UpdateRequest $request, Project $tag): JsonResponse
+    public function update(UpdateRequest $request, Project $project): JsonResource
     {
-        return response()->json($tag->update($request->validated()));
+        $project->update($request->validated());
+
+        return ProjectResource::make($project);
     }
 
-    public function destroy(Project $tag): JsonResponse
+    public function destroy(Project $project): JsonResponse
     {
-        return response()->json($tag->delete());
+        return response()->json($project->delete());
     }
 }
