@@ -32,9 +32,7 @@ class ColumnController extends Controller
 
     public function changeOrder(ChangeOrderRequest $request): JsonResponse
     {
-        $this->columnService->changeOrder($request->get('columns'));
-
-        return response()->json(['status' => true], JsonResponse::HTTP_OK);
+        return response()->json(['status' => $this->columnService->changeOrder($request->get('columns'))], JsonResponse::HTTP_OK);
     }
 
     public function show(Column $column): JsonResource

@@ -1,19 +1,24 @@
 <template>
-    <quill-editor
-        ref="quill"
-        v-model="value"
-        :options="editorOption"
-        @ready="onFocus($event)"
-        v-click-outside="onClickOutside"
-    />
+    <OnClickOutside @trigger="onClickOutside">
+        <quill-editor ref="quill" v-model:content="content" contentType="html" theme="snow" :options="editorOption"
+            @ready="onFocus($event)" />
+    </OnClickOutside>
 </template>
 
 <script>
-import quillMixin from '@/mixins/quillMixin';
+import { defineComponent, onMounted, ref, watch } from 'vue';
+import { OnClickOutside } from '@vueuse/components'
+import 'quill/dist/quill.snow.css';
+import 'quill-mention/dist/quill.mention.min.css';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import { QuillEditor } from '@vueup/vue-quill';
+import mention from 'quill-mention';
 
-export default {
-    mixins: [quillMixin],
-
+export default defineComponent({
+    components: {
+        QuillEditor,
+        OnClickOutside
+    },
     props: {
         description: {
             type: String,
@@ -23,37 +28,84 @@ export default {
             type: Boolean,
             default: false,
         },
+        atValues: {
+            type: Array,
+            default: () => [],
+        },
     },
+    emits: ['addAttachments', 'onSave', 'hideEditor'],
+    setup(props, { emit }) {
+        const content = ref(props.description);
+        const quill = ref();
+        const value = ref('');
+        const editorOption = {
+            modules: {
+                toolbar: [['bold', 'italic', 'underline', 'strike'], [{ color: [] }], ['link'], ['clean']],
+                mention: {
+                    minChars: 1,
+                    allowedChars: /^[a-zA-Z0-9_]*$/,
+                    mentionDenotationChars: ['@'],
+                    source: (searchTerm, renderList) => {
+                        if (searchTerm.length === 0) {
+                            renderList(props.atValues, searchTerm);
+                        } else {
+                            const matches = [];
+                            for (const i = 0; i < props.atValues.length; i++)
+                                if (~props.atValues[i].value.toLowerCase().indexOf(searchTerm.toLowerCase()))
+                                    matches.push(props.atValues[i]);
+                            renderList(matches, searchTerm);
+                        }
+                    },
+                },
+            },
+        }
 
-    data() {
-        return {
-            value: this.description,
-            quillEvent: null,
-        };
-    },
+        let newContent = '';
 
-    mounted() {
-        if (this.isComment) {
-            const qlToolbar = this.$refs.quill.getToolbar();
-            qlToolbar.classList.add('d-flex');
+        watch(content, newValue => {
+            newContent = newValue;
+            value.value = newValue;
+        })
 
-            let fileInput = document.createElement('input');
-            fileInput.setAttribute('type', 'file');
-            fileInput.setAttribute('multiple', true);
-            fileInput.setAttribute('ref', 'files');
-            fileInput.setAttribute('id', 'files');
-            fileInput.className = 'd-none';
-            fileInput.addEventListener('change', () => {
-                this.$emit('addAttachments', qlToolbar.querySelector('#files').files);
-            });
+        watch(
+            () => value,
+            newValue => {
+                if (newContent === newValue) return;
 
-            let attachment = document.createElement('span');
-            attachment.className = 'ql-formats';
-            attachment.appendChild(fileInput);
+                quill.value.setHTML(newValue);
 
-            let attachmentButton = document.createElement('button');
+                // Workaround https://github.com/vueup/vue-quill/issues/52
+                // move cursor to end
+                nextTick(() => {
+                    const q = quill.value.getQuill();
+                    q.setSelection(newValue.length, 0, 'api');
+                    q.focus();
+                })
+            }
+        )
 
-            attachmentButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"
+        onMounted(() => {
+            if (props.isComment) {
+                const qlToolbar = quill.value.getToolbar();
+                qlToolbar.classList.add('d-flex');
+
+                const fileInput = document.createElement('input');
+                fileInput.setAttribute('type', 'file');
+                fileInput.setAttribute('multiple', 'true');
+                fileInput.setAttribute('ref', 'files');
+                fileInput.setAttribute('id', 'files');
+                fileInput.className = 'd-none';
+                fileInput.addEventListener('change', () => {
+                    emit('addAttachments', qlToolbar.querySelector('#files').files);
+                });
+
+                const attachment = document.createElement('span');
+                attachment.className = 'ql-formats';
+                attachment.appendChild(fileInput);
+
+                const attachmentButton = document.createElement('button');
+
+                attachmentButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"
                         width="16"
                         height="16"
                         fill="currentColor"
@@ -65,46 +117,45 @@ export default {
                         />
                       </svg>`;
 
-            attachmentButton.setAttribute('type', 'button');
-            attachmentButton.addEventListener('click', () => {
-              qlToolbar.querySelector('#files').click();
-            });
+                attachmentButton.setAttribute('type', 'button');
+                attachmentButton.addEventListener('click', () => {
+                    qlToolbar.querySelector('#files').click();
+                });
 
-            attachment.appendChild(attachmentButton);
+                attachment.appendChild(attachmentButton);
 
-            qlToolbar.appendChild(attachment);
+                qlToolbar.appendChild(attachment);
 
-            let button = document.createElement('button');
-            button.innerText = 'Comment';
-            button.className = 'auto-width btn btn-primary bg-primary d-flex align-items-center ms-auto rounded';
+                const button = document.createElement('button');
+                button.innerText = 'Comment';
+                button.className = 'auto-width btn btn-primary bg-primary d-flex align-items-center ms-auto rounded';
 
-            button.setAttribute('type', button);
-            button.addEventListener('click', () => {
-                this.$emit('onSave', this.value);
-                this.value = '';
-            });
+                button.setAttribute('type', button);
+                button.addEventListener('click', () => {
+                    emit('onSave', content.value);
+                    content.value = '';
+                    quill.value.setHTML('');
+                });
 
-            qlToolbar.appendChild(button);
-        }
-    },
-
-    methods: {
-        onFocus(event) {
-            this.quillEvent = event;
-            event.focus();
-        },
-
-        onClickOutside() {
-            if (this.quillEvent && !this.quillEvent.hasFocus()) {
-                const quillFormContainer = this.quillEvent.container.parentNode.parentNode;
-
-                if (quillFormContainer.classList.contains('editor-form')) {
-                    this.$emit('hideEditor', this.value);
-                }
+                qlToolbar.appendChild(button);
             }
-        },
-    },
-};
+        })
+
+        function onFocus(event) {
+            quill.value.getQuill().focus();
+        }
+
+        function onClickOutside() {
+            const quillFormContainer = quill.value.getQuill().container.parentNode.parentNode;
+
+            if (quillFormContainer.classList.contains('editor-form')) {
+                emit('hideEditor', content.value);
+            }
+        }
+
+        return { editorOption, content, quill, onFocus, onClickOutside }
+    }
+});
 </script>
 
 <style lang="scss">
@@ -114,26 +165,26 @@ export default {
     border: 1px solid #ccc;
     background-color: white;
 
-    > .ql-toolbar {
+    >.ql-toolbar {
         border: none;
         border-radius: 0;
         background-color: inherit;
 
-        > .ql-formats {
-            > button {
+        >.ql-formats {
+            >button {
                 height: 20px;
                 width: 22px;
             }
         }
     }
 
-    > .ql-container {
+    >.ql-container {
         border: none;
         border-radius: 0;
         background-color: inherit;
         transition: max-height 0.2s ease-out;
 
-        > .ql-editor {
+        >.ql-editor {
             height: auto;
             max-height: 80px;
         }

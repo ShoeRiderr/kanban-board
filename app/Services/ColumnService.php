@@ -17,6 +17,7 @@ class ColumnService
 
             return true;
         } catch (\Throwable $e) {
+            logger($e->getMessage());
             return false;
         }
     }

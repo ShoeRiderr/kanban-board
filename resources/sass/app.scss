@@ -7,10 +7,27 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
+// Override
+@import 'override/quill';
+
 @import 'typhography';
 
 @import 'kanbanBoard';
 
 .horizontal-scrollable {
     overflow-x: auto;
+}
+
+.avatar-minature {
+    &.lg {
+        width: 40px;
+        height: 40px;
+    }
+
+    &.md {
+        width: 36px;
+        height: 36px;
+    }
+    background-size: cover;
+    background-color: #d9d9d9;
 }

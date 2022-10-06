@@ -1,6 +1,6 @@
 <template>
-  <div class="horizontal-scrollable">
-    <notifications group="alert" position="bottom right" />
+  <div class="horizontal-scrollable px-4">
+    <notifications group="alert" position="top center" />
     <div class="d-flex">
       <div data-bs-toggle="modal" data-bs-target="#tableModal" class="d-flex flex-row align-items-center pointer">
         <h2 class="m-0 dark-color">
@@ -100,7 +100,7 @@ export default {
     },
 
     getProjects() {
-      api.project.getOngoingProjects().then((response) => {
+      api.project.all().then((response) => {
         this.projects = response.data.data;
       });
     },
@@ -171,7 +171,7 @@ export default {
           this.kanbanBoardStore.setTable(data);
 
           api.tag.all().then((response) => {
-            this.kanbanBoardStore.setTags(response.data);
+            this.kanbanBoardStore.setTags(response.data.data);
           });
         })
         .catch((error) => {

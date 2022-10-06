@@ -1,6 +1,6 @@
 <template>
   <a @click="openAttachment(true)" class="d-flex">
-    <div class="attachment-image-box--comment pt-1 d-flex">
+    <div class="attachment-image-box--comment pt-1 d-flex pointer">
       <img v-if="isImage" class="attachment-img--comment" :src="fileAttachment" alt="Image" />
       <div v-else class="attachment-img--comment">
         <svg width="15px" height="15px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">

@@ -1,0 +1,18 @@
+.ql-toolbar {
+  background-color: #ededed;
+  border-radius: 5px 5px 0 0;
+}
+
+.ql-container {
+  background-color: white;
+  border-radius: 0 0 5px 5px;
+
+  & > .ql-editor {
+    height: 80px;
+    padding: 6px 10px;
+  }
+}
+
+.height-max-content {
+  height: max-content;
+}

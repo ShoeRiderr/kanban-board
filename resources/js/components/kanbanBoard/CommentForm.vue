@@ -1,11 +1,11 @@
 <template>
-  <div class="form-group">
+  <div class="form-group height-max-content">
     <quill-text-editor :description="form.content" :required="!hasFormFiles" :is-comment="true" @hideEditor="onClose"
       @onSave="addComment" @addAttachments="handleFilesUpload" :at-values="quillMentionValues" />
     <div class="d-flex comment-attachments">
       <div class="w-100">
         <div class="d-flex flex-column">
-          <div v-for="(item, key) in form.files" :key="key" class="d-flex align-items-center">
+          <div v-for="(item, key) in form.files" :key="key" class="d-flex align-items-center pointer">
             <small class="pe-1 text-secondary">
               <u>
                 {{ item.file ? item.file.name : item.name }}
@@ -16,9 +16,9 @@
               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="onRemoveFile(true)">
               <u>Delete</u>
             </small>
-            <button v-else type="button" class="close float-none" aria-label="Close" @click="deleteFile(key)">
+            <small v-else class="float-none ps-2" aria-label="Close" @click="deleteFile(key)">
               <span aria-hidden="true">&times;</span>
-            </button>
+            </small>
 
             <delete-confirm-alert :trigger-id="`deleteAttachment${item.id}`" @onDelete="deleteAttachment(item, key)">
               Deleting an attachment is forever. There is no undo.

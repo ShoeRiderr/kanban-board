@@ -37,9 +37,7 @@ class TaskController extends Controller
 
     public function changeOrder(ChangeOrderRequest $request): JsonResponse
     {
-        $this->taskService->changeOrder($request->get('tasks'));
-
-        return response()->json(['status' => true], JsonResponse::HTTP_OK);
+        return response()->json(['status' => $this->taskService->changeOrder($request->get('tasks'))], JsonResponse::HTTP_OK);
     }
 
     public function assignCollaborators(Task $task, AssignCollaboratorsRequest $request)
@@ -85,11 +83,11 @@ class TaskController extends Controller
 
     public function archive(Task $task): JsonResponse
     {
-        return response()->json($task->delete($task->id), JsonResponse::HTTP_OK);
+        return response()->json($task->delete(), JsonResponse::HTTP_OK);
     }
 
     public function destroy(Task $task): JsonResponse
     {
-        return response()->json($task->forceDelete($task->id), JsonResponse::HTTP_OK);
+        return response()->json($task->forceDelete(), JsonResponse::HTTP_OK);
     }
 }

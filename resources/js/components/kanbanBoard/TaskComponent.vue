@@ -1,56 +1,34 @@
 <template>
   <div class="card shadow-sm">
-    <div
-      class="pointer"
-      @click="openModal()"
-      :data-bs-target="`#${taskModalId}`"
-      data-bs-toggle="modal"
-    >
+    <div class="pointer" @click="openModal()" :data-bs-target="`#${taskModalId}`" data-bs-toggle="modal">
       <div v-if="getLastAttachedImage" class="w-100">
-        <div class="task-image-box">
+        <div class="task-image-box rounded">
           <img class="task-image" :src="getLastAttachedImage" />
         </div>
       </div>
       <div class="task-content">
-        <div class="d-flex align-items-center margin-bottom">
-          <span v-if="task.project" class="margin-right badge badge-warning">{{
-            task.project.name
-          }}</span>
-          <span
-            v-for="(tag, index) in task.tags"
-            :key="index"
-            class="margin-right badge badge-success"
-          >
-            {{ tag.name }}
-          </span>
-        </div>
         <span class="dark-color">
           {{ task.name }}
         </span>
+        <div class="d-flex align-items-center margin-bottom">
+          <small v-if="task.project" class="margin-right px-1 bg-primary rounded">
+            {{task.project.name}}
+          </small>
+          <small v-for="(tag, index) in task.tags" :key="index" class="margin-right px-1 bg-warning rounded">
+            {{ tag.name }}
+          </small>
+        </div>
         <div class="d-flex align-items-center mt-1">
           <small v-if="dueDate.value" class="me-1">
             <due-date-component :due-date="dueDate" />
           </small>
-          <avatar-item-component
-            v-if="task.user"
-            avatar-class="round avatar-minature md"
-            :user="task.user"
-          />
+          <avatar-item-component v-if="task.user" avatar-class="rounded-circle avatar-minature md ms-auto" :user="task.user" />
         </div>
       </div>
     </div>
-    <task-modals-component
-      :auth-user="authUser"
-      :task="task"
-      :projects="projects"
-      :users="users"
-      :task-modal-id="taskModalId"
-      @archiveTask="archiveTask"
-      @addComment="addComment"
-      @editComment="editComment"
-      @deleteComment="deleteComment"
-      @addCollaborators="addCollaborators"
-    />
+    <task-modals-component :auth-user="authUser" :task="task" :projects="projects" :users="users"
+      :task-modal-id="taskModalId" @archiveTask="archiveTask" @addComment="addComment" @editComment="editComment"
+      @deleteComment="deleteComment" @addCollaborators="addCollaborators" />
   </div>
 </template>
 
@@ -88,12 +66,11 @@ export default {
   },
 
   mounted() {
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const task = urlParams.get("task");
-      if (task && task == this.task.id) {
-        // $(`#${this.taskModalId}`)[0].modal('show')
-        $(`#${this.taskModalId}`).modal('show');
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const task = urlParams.get("task");
+    if (task && task == this.task.id) {
+      $(`#${this.taskModalId}`).modal('show');
     }
   },
 

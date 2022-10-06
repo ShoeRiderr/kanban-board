@@ -2,20 +2,22 @@
   <div class="d-flex align-items-center">
     <small class="text-muted me-1">Collaborators:</small>
     <avatar-item-component
-      v-if="!showInput"
+      v-if="!showSelect"
       v-for="(collaborator, index) in collaborators"
       :key="index"
       :user="collaborator"
     />
     <div
-      v-if="!showInput"
+      v-if="!showSelect"
       class="circle-button d-flex align-items-center justify-content-center pointer collaborator-gap"
-      @click="showInput = true"
+      @click="onShowSelect"
     >
       +
     </div>
-    <multiselect
-      v-if="showInput"
+    <v-select
+      v-show="showSelect"
+      class="form-control"
+      ref="select"
       v-model="form.collaborators"
       @close="addCollaborators"
       :options="users"
@@ -33,17 +35,15 @@
       <template slot="selection" slot-scope="{ values, isOpen }">
         <span class="multiselect__single" v-if="values.length && !isOpen"> {{ values.length }} options selected </span>
       </template>
-    </multiselect>
+    </v-select>
   </div>
 </template>
 
 <script>
-import Multiselect from 'vue-multiselect';
 import AvatarItemComponent from './AvatarItemComponent.vue';
 
 export default {
   components: {
-    Multiselect,
     AvatarItemComponent,
   },
 
@@ -63,23 +63,30 @@ export default {
       form: {
         collaborators: this.collaborators,
       },
-      showInput: false,
+      showSelect: false,
     };
   },
 
   methods: {
     addCollaborators() {
-      this.showInput = false;
+      this.showSelect = false;
       this.$emit('addCollaborators', this.form.collaborators);
+    },
+
+    onShowSelect(value) {
+      this.showSelect = value;
+
+      if (value) {
+        this.$nextTick(() => {
+          this.$refs.select.searchEl.focus();
+        });
+      }
     },
   },
 };
 </script>
 
 <style>
-.multiselect > .multiselect__content-wrapper {
-  width: 100%;
-}
 .collaborator-gap {
   margin-left: 5px;
 }

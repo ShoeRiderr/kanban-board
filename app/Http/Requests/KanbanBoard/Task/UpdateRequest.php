@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
         return [
             'name' => ['sometimes'],
             'description' => ['nullable'],
-            'estimation' => ['nullable'],
+            'estimation' => ['nullable', 'Integer'],
             'order' => ['sometimes', 'numeric'],
             'due_date' => ['sometimes', 'date'],
             'column_id' => ['sometimes', 'exists:columns,id'],

@@ -1,30 +1,15 @@
 <template>
   <div>
-    <div
-      :id="taskModalId"
-      class="modal fade"
-      tabindex="-1"
-      role="dialog"
-      aria-hidden="true"
-    >
+    <div :id="taskModalId" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
+        <div class="modal-content px-2">
+          <div class="modal-header py-2">
             <div v-if="task" class="d-flex align-items-center w-100">
               <div class="ms-auto">
-                <i
-                  class="fa fa-ellipsis-v pointer p-1"
-                  id="dropdownMenuColumn"
-                  data-bs-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                ></i>
+                <i class="fa fa-ellipsis-v pointer p-1" id="dropdownMenuColumn" data-bs-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false"></i>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuColumn">
-                  <span
-                    class="dropdown-item pointer"
-                    data-bs-toggle="modal"
-                    :data-bs-target="`#${confirmTaskModalId}`"
-                  >
+                  <span class="dropdown-item pointer" data-bs-toggle="modal" :data-bs-target="`#${confirmTaskModalId}`">
                     Archive
                   </span>
                 </div>
@@ -34,43 +19,25 @@
           <div class="modal-body">
             <div class="p-1 scrollable">
               <div class="pb-1">
-                <h2
-                  v-if="!showNameInput"
-                  class="pe-5 pointer dark-color task-title-text"
-                  @click="onShowNameInput(true)"
-                >
+                <h2 v-if="!showNameInput" class="pe-5 pointer dark-color task-title-text"
+                  @click="onShowNameInput(true)">
                   {{ task.name }}
                 </h2>
-                <input
-                  v-show="showNameInput"
-                  class="w-100 dark-color task-title-input"
-                  type="text"
-                  ref="name"
-                  id="name"
-                  required="required"
-                  v-model="taskForm.name"
-                  @focusout="onShowNameInput(false)"
-                  @change="editName"
-                />
+                <input v-show="showNameInput" class="w-100 dark-color task-title-input" type="text" ref="name" id="name"
+                  required="required" v-model="taskForm.name" @focusout="onShowNameInput(false)" @change="editName" />
               </div>
               <div class="row pb-1">
                 <div class="col-3">
                   <label class="form-label" for="user">Assign user</label>
                 </div>
                 <div class="col-8">
-                  <span
-                    v-if="!showUserInput"
-                    class="pointer w-50"
-                    @click="onShowUserInput(true, $event)"
-                  >
+                  <span v-if="!showUserInput" class="pointer w-50" @click="onShowUserInput(true)">
                     <div v-if="task.user" class="d-flex align-items-center">
                       <avatar-item-component :user="task.user" />
                       <span class="ms-1">{{ task.user.name }}</span>
                     </div>
                     <div v-else class="d-flex align-items-center text-secondary assign">
-                      <div
-                        class="circle-button dotted-border d-flex justify-content-center align-items-center"
-                      >
+                      <div class="circle-button dotted-border d-flex justify-content-center align-items-center">
                         <i class="far fa-user"></i>
                       </div>
                       <span class="ms-1">
@@ -78,22 +45,11 @@
                       </span>
                     </div>
                   </span>
-                  <multiselect
-                    v-show="showUserInput"
-                    v-model="taskForm.user"
-                    @close="assignUser"
-                    :options="users"
-                    :clear-on-select="false"
-                    :close-on-select="false"
-                    :show-labels="false"
-                    label="name"
-                    placeholder="Type to search"
-                    track-by="id"
-                  >
-                    <span slot="noResult"
-                      >Oops! No elements found. Consider changing the search query.</span
-                    >
-                  </multiselect>
+                  <v-select v-show="showUserInput" ref="user" v-model="taskForm.user" @close="assignUser"
+                    :options="users" :clear-on-select="false" :close-on-select="false" :show-labels="false" label="name"
+                    placeholder="Type to search" track-by="id">
+                    <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
+                  </v-select>
                 </div>
               </div>
               <div class="row pb-1">
@@ -101,20 +57,10 @@
                   <label class="form-label" for="user">Due date</label>
                 </div>
                 <div class="col-8">
-                  <due-date-component
-                    v-if="!showDueDateInput"
-                    :due-date="dueDate"
-                    @onShowDueInput="onShowDueDateInput(true)"
-                  />
-                  <input
-                    v-show="showDueDateInput"
-                    ref="dueDate"
-                    type="datetime-local"
-                    class="form-control"
-                    v-model="taskForm.due_date"
-                    @focusout="onShowDueDateInput(false)"
-                    @change="editDueDate"
-                  />
+                  <due-date-component v-if="!showDueDateInput" :due-date="dueDate"
+                    @onShowDueInput="onShowDueDateInput(true)" />
+                  <input v-show="showDueDateInput" ref="dueDate" type="datetime-local" class="form-control"
+                    v-model="taskForm.due_date" @focusout="onShowDueDateInput(false)" @change="editDueDate" />
                 </div>
               </div>
               <div class="row pb-1">
@@ -122,19 +68,13 @@
                   <label class="form-label" for="project">Assign to project</label>
                 </div>
                 <div class="col-8">
-                  <span
-                    v-if="!showProjectInput"
-                    class="pointer w-50"
-                    @click="onShowProjectInput(true, $event)"
-                  >
+                  <span v-if="!showProjectInput" class="pointer w-50" @click="onShowProjectInput(true)">
                     <div v-if="task.project" class="d-flex align-items-center">
-                      <span class="badge badge-warning">{{ task.project.name }}</span>
+                      <span class="px-1 bg-primary rounded">{{ task.project.name }}</span>
                     </div>
                     <div v-else class="d-flex align-items-center text-secondary assign">
-                      <div
-                        class="circle-button dotted-border d-flex justify-content-center align-items-center"
-                      >
-                        <i class="feather icon-layers"></i>
+                      <div class="circle-button dotted-border d-flex justify-content-center align-items-center">
+                        <i class="fa fa-suitcase"></i>
                       </div>
                       <span class="ms-1">
                         <small>No project assigned</small>
@@ -142,22 +82,11 @@
                     </div>
                   </span>
 
-                  <multiselect
-                    v-show="showProjectInput"
-                    v-model="taskForm.project"
-                    @close="assignProject"
-                    :options="projects"
-                    :clear-on-select="false"
-                    :close-on-select="false"
-                    :show-labels="false"
-                    label="name"
-                    placeholder="Type to search"
-                    track-by="id"
-                  >
-                    <span slot="noResult"
-                      >Oops! No elements found. Consider changing the search query.</span
-                    >
-                  </multiselect>
+                  <v-select v-show="showProjectInput" ref="project" v-model="taskForm.project" @close="assignProject"
+                    :options="projects" :clear-on-select="false" :close-on-select="false" :show-labels="false"
+                    label="name" placeholder="Type to search" track-by="id">
+                    <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
+                  </v-select>
                 </div>
               </div>
               <div class="row pb-1">
@@ -165,55 +94,32 @@
                   <label class="form-label" for="project">Assign tags</label>
                 </div>
                 <div class="col-8">
-                  <span
-                    v-if="!showTagInput"
-                    class="pointer w-50"
-                    @click="onShowTagInput(true, $event)"
-                  >
+                  <span v-if="!showTagInput" class="pointer w-50" @click="onShowTagInput(true)">
                     <div v-if="hasTags" class="d-flex align-items-center">
-                      <span
-                        v-for="(tag, index) in task.tags"
-                        :key="index"
-                        class="margin-right badge badge-success"
-                      >
+                      <span v-for="(tag, index) in task.tags" :key="index" class="margin-right bg-warning rounded px-1">
                         {{ tag.name }}
                       </span>
                     </div>
                     <div v-else class="d-flex align-items-center text-secondary assign">
-                      <div
-                        class="circle-button dotted-border d-flex justify-content-center align-items-center"
-                      >
-                        <i class="feather icon-hash"></i>
+                      <div class="circle-button dotted-border d-flex justify-content-center align-items-center">
+                        <i class="fa fa-hashtag"></i>
                       </div>
                       <span class="ms-1">
                         <small>No tags assigned</small>
                       </span>
                     </div>
                   </span>
-                  <!-- <multiselect
-                    v-show="showTagInput"
-                    v-model="taskForm.tags"
-                    @close="assignTags"
-                    :options="kanbanBoardStore.tags"
-                    :multiple="true"
-                    :group-select="true"
-                    :clear-on-select="false"
-                    :close-on-select="false"
-                    :hide-selected="true"
-                    :show-labels="false"
-                    label="name"
-                    placeholder="Type to search"
-                    track-by="id"
-                  >
-                    <span slot="noResult"
-                      >Oops! No elements found. Consider changing the search query.</span
-                    >
+                  <v-select v-show="showTagInput" ref="tag" v-model="taskForm.tags" @close="assignTags"
+                    :options="kanbanBoardStore.tags" :multiple="true" :group-select="true" :clear-on-select="false"
+                    :close-on-select="false" :hide-selected="true" :show-labels="false" label="name"
+                    placeholder="Type to search" track-by="id">
+                    <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
                     <template slot="selection" slot-scope="{ values, isOpen }">
                       <span class="multiselect__single" v-if="values.length && !isOpen">
                         {{ values.length }} options selected
                       </span>
                     </template>
-                  </multiselect> -->
+                  </v-select>
                 </div>
               </div>
               <div class="row pb-1">
@@ -221,25 +127,12 @@
                   <label class="form-label" for="estimation"> Estimation </label>
                 </div>
                 <div class="col-8">
-                  <span
-                    v-if="!showEstimationInput"
-                    class="pe-5 pointer"
-                    @click="onShowEstimationInput(true)"
-                  >
+                  <span v-if="!showEstimationInput" class="pe-5 pointer" @click="onShowEstimationInput(true)">
                     {{ taskForm.estimation }}
                   </span>
-                  <input
-                    v-show="showEstimationInput"
-                    class="form-control col-3"
-                    type="time"
-                    ref="estimation"
-                    id="estimation"
-                    step="60"
-                    placeholder="h"
-                    v-model="taskForm.estimation"
-                    @focusout="onShowEstimationInput(false)"
-                    @change="editEstimation"
-                  />
+                  <input v-show="showEstimationInput" class="form-control col-3" type="time" ref="estimation"
+                    id="estimation" step="60" placeholder="h" v-model="taskForm.estimation"
+                    @focusout="onShowEstimationInput(false)" />
                 </div>
               </div>
               <div class="row pb-1">
@@ -247,14 +140,7 @@
                   <label class="form-label">Attachments</label>
                 </div>
                 <div class="col-8">
-                  <input
-                    id="files"
-                    class="d-none"
-                    ref="files"
-                    type="file"
-                    multiple
-                    @change="handleFilesUpload"
-                  />
+                  <input id="files" class="d-none" ref="files" type="file" multiple @change="handleFilesUpload" />
                   <div class="d-flex justify-content-end">
                     <span class="text-secondary pointer" @click="addFiles">
                       <small>
@@ -268,12 +154,8 @@
                 <div class="col-3">
                   <label class="form-label" for="description">Description</label>
                 </div>
-                <div class="col-8 editor-form">
-                  <span
-                    v-if="!showDescriptionInput"
-                    class="pe-5 pointer"
-                    @click="onShowDescriptionInput(true)"
-                  >
+                <div class="col-8 editor-form height-max-content">
+                  <span v-if="!showDescriptionInput" class="pe-5 pointer" @click="onShowDescriptionInput(true)">
                     <div v-if="hasDescription">
                       <span v-html="task.description"></span>
                     </div>
@@ -281,44 +163,27 @@
                       Write more detail to this task...
                     </div>
                   </span>
-                  <description-component
-                    v-if="showDescriptionInput"
-                    :description="taskForm.description"
-                    @hideEditor="editDescription"
-                  />
+                  <description-component v-if="showDescriptionInput" :description="taskForm.description"
+                    @hideEditor="editDescription" />
                 </div>
               </div>
               <div class="w-100">
                 <hr />
                 <h5 v-if="hasAttachments">Attachments</h5>
                 <div class="d-flex flex-column">
-                  <task-attachment-component
-                    class="task"
-                    v-for="(file, index) in attachedFiles"
-                    :key="`file-${index}`"
-                    :file="file"
-                  />
+                  <task-attachment-component class="task" v-for="(file, index) in attachedFiles" :key="`file-${index}`"
+                    :file="file" />
                 </div>
                 <h5 class="pt-2">Comments</h5>
                 <hr />
-                <comment-component
-                  v-for="(comment, index) in task.comments.slice().reverse()"
-                  :key="index"
-                  :auth-user="authUser"
-                  :comment="comment"
-                  :users="users"
-                  @editComment="editComment"
-                  @deleteComment="deleteComment"
-                />
+                <comment-component v-for="(comment, index) in task.comments.slice().reverse()" :key="index"
+                  :auth-user="authUser" :comment="comment" :users="users" @editComment="editComment"
+                  @deleteComment="deleteComment" />
               </div>
             </div>
             <div class="pt-2 sticky bottom comment-form-grid pb-1">
-              <new-comment-component
-                :collaborators="task.collaborators"
-                :users="users"
-                @addComment="addComment"
-                @addCollaborators="addCollaborators"
-              />
+              <new-comment-component :collaborators="task.collaborators" :users="users" @addComment="addComment"
+                @addCollaborators="addCollaborators" />
             </div>
           </div>
         </div>
@@ -331,7 +196,6 @@
 </template>
 
 <script>
-import Multiselect from "vue-multiselect";
 import AvatarItemComponent from "@/components/kanbanBoard/AvatarItemComponent.vue";
 import CommentComponent from "@/components/kanbanBoard/CommentComponent.vue";
 import DescriptionComponent from "@/components/kanbanBoard/DescriptionComponent.vue";
@@ -342,7 +206,7 @@ import TaskAttachmentComponent from "@/components/kanbanBoard/TaskAttachmentComp
 import QuillTextEditor from "@/components/kanbanBoard/QuillTextEditor.vue";
 import taskStatusMixin from "@/modules/kanbanBoard/mixins/taskStatusMixin";
 import api from "@/api";
-import { convertEstimation } from "@/utils/time";
+import { convertEstimation, parseFromHHMMTOSeconds } from "@/utils/time";
 import { kanbanBoard } from "@/store/kanbanBoard";
 
 export default {
@@ -354,7 +218,6 @@ export default {
     ConfirmModal,
     DescriptionComponent,
     DueDateComponent,
-    Multiselect,
     NewCommentComponent,
     TaskAttachmentComponent,
     QuillTextEditor,
@@ -529,14 +392,6 @@ export default {
       this.onShowTagInput(false);
     },
 
-    editEstimation() {
-      const estimation = this.taskForm.estimation.split(":");
-
-      let formData = new FormData();
-
-      this.editTask(formData);
-    },
-
     editDescription(event) {
       this.onShowDescriptionInput(false);
 
@@ -552,28 +407,12 @@ export default {
     editTask(payload) {
       api.kanbanBoard.task
         .update(this.task.id, payload)
-        .then(() => {
-          this.$notify({
-            group: "alert",
-            title: "Success",
-            type: "success",
-            text: "Task edited successfully.",
-          });
-        })
         .catch((error) => {
-          this.$notify({
-            group: "alert",
-            title: "Error",
-            type: "error",
-            text: "Something went wrong while editing the task.",
-          });
           console.log(error);
         });
     },
 
     archiveTask() {
-      $(".modal").modal("hide");
-      $(".modal-backdrop").remove();
       this.$emit("archiveTask", this.task.id);
     },
 
@@ -613,14 +452,12 @@ export default {
       }
     },
 
-    onShowUserInput(value, e) {
+    onShowUserInput(value) {
       this.showUserInput = value;
 
-      if (value && e) {
+      if (value) {
         this.$nextTick(() => {
-          const parentNode = document.elementFromPoint(e.clientX, e.clientY).parentNode;
-
-          parentNode.querySelector(".multiselect__input").focus();
+          this.$refs.user.searchEl.focus();
         });
       }
     },
@@ -635,26 +472,22 @@ export default {
       }
     },
 
-    onShowProjectInput(value, e) {
+    onShowProjectInput(value) {
       this.showProjectInput = value;
 
       if (value) {
         this.$nextTick(() => {
-          const parentNode = document.elementFromPoint(e.clientX, e.clientY).parentNode;
-
-          parentNode.querySelector(".multiselect__input").focus();
+          this.$refs.project.searchEl.focus();
         });
       }
     },
 
-    onShowTagInput(value, e) {
+    onShowTagInput(value) {
       this.showTagInput = value;
 
-      if (value && e) {
+      if (value) {
         this.$nextTick(() => {
-          const parentNode = document.elementFromPoint(e.clientX, e.clientY).parentNode;
-
-          parentNode.querySelector(".multiselect__input").focus();
+          this.$refs.tag.searchEl.focus();
         });
       }
     },
@@ -666,7 +499,17 @@ export default {
         this.$nextTick(() => {
           this.$refs.estimation.focus();
         });
+        return;
       }
+
+      const estimation = parseFromHHMMTOSeconds(this.taskForm.estimation);
+
+      let formData = new FormData();
+
+      formData.append('estimation', estimation)
+
+      this.editTask(formData);
+
     },
 
     onShowDescriptionInput(value) {
@@ -687,13 +530,16 @@ export default {
   padding-bottom: 0;
   padding-top: 0;
 }
+
 .modal-body {
   padding: 0;
 }
+
 .time-tracker--btn {
   &:disabled {
     opacity: 0.5;
   }
+
   .time-tracker--btn-icon {
     &[data-action="stop"] {
       display: block;

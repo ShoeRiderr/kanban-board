@@ -10,14 +10,17 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\TableResource;
 use App\Models\KanbanBoard\Comment;
 use App\Services\CommentService;
+use App\Services\FileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CommentController extends Controller
 {
-    public function __construct(private CommentService $commentService)
-    {
+    public function __construct(
+        private CommentService $commentService,
+        private FileService $fileService
+    ) {
     }
 
     public function index(): JsonResource
@@ -50,7 +53,7 @@ class CommentController extends Controller
     {
         $files = $request->files->get('files');
 
-        $this->commentService->update($comment->id, $request->validated());
+        $this->commentService->update($comment, $request->validated());
 
         if ($files) {
             foreach ($files as $key => $file) {

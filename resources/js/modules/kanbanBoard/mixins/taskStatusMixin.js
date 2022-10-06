@@ -36,7 +36,7 @@ export default {
                 ? {
                       value: dueDate.format('D MMM, YYYY HH:mm'),
                       class: {
-                          text: isBefore ? 'text-red' : isSameOrTommorow ? 'text-green' : 'text-black',
+                          text: isBefore ? 'text-danger' : isSameOrTommorow ? 'text-success' : 'text-dark',
                           icon: isBefore ? 'red' : isSameOrTommorow ? 'green' : 'black',
                       },
                   }

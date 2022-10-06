@@ -12,16 +12,10 @@
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Close
           </button>
-          <button v-if="!formId" type="button" class="btn btn-primary" @click="onSave">
+          <button v-if="!formId" type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="onSave">
             Save
           </button>
-          <button
-            v-if="formId"
-            class="btn btn-primary"
-            type="submit"
-            @click="closeModal"
-            :form="formId"
-          >
+          <button v-if="formId" class="btn btn-primary" type="submit" data-bs-dismiss="modal" :form="formId">
             Save
           </button>
         </div>
@@ -31,7 +25,6 @@
 </template>
 
 <script>
-import { Modal } from "bootstrap";
 export default {
   props: {
     modalTitle: {
@@ -64,12 +57,7 @@ export default {
 
   methods: {
     onSave() {
-      this.closeModal();
       this.$emit("onSave");
-    },
-    closeModal() {
-      this.$refs.modal.classList.remove("show");
-      document.getElementsByClassName("modal-backdrop")[0].classList.remove("show");
     },
   },
 };

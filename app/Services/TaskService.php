@@ -10,13 +10,12 @@ class TaskService
     {
         try {
             foreach ($tasks as $task) {
-                Task::find($task['id'])->update([
-                    'order' => $task['order'],
-                ]);
+                Task::find($task['id'])->update($task);
             }
 
             return true;
         } catch (\Throwable $e) {
+            logger($e->getMessage());
             return false;
         }
     }

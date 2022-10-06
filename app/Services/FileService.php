@@ -30,50 +30,9 @@ class FileService
                 'origin_name' => $file->getClientOriginalName(),
             ]);
         } catch (Throwable $e) {
-            logger($e);
+            logger($e->getMessage());
             throw new Exception('Something went wrong during saving the image.');
         }
-    }
-
-    public function createThumbnail(string $image, string $storageType = 'public', string $oryginalName = '', int $quality = 90)
-    {
-        if (is_file($image)) {
-            $imagick = new \Imagick(realpath($image));
-            $imageWidth = $imagick->getImageWidth();
-            $imageHeight = $imagick->getImageHeight();
-            $currentTimestamp = Carbon::now()->format('Y_m_d_His');
-
-            if ($imageHeight > $imageWidth) {
-                $ratio = self::MAX_SIDE_LENGTH / $imageHeight;
-                $newHeight = self::MAX_SIDE_LENGTH;
-                $newWidth = $imageWidth * $ratio;
-            } else {
-                $ratio = self::MAX_SIDE_LENGTH / $imageWidth;
-                $newWidth = self::MAX_SIDE_LENGTH;
-                $newHeight = $imageHeight * $ratio;
-            }
-
-            $imagick->setImageFormat('jpeg');
-            $imagick->setImageCompression(\Imagick::COMPRESSION_JPEG);
-            $imagick->setImageCompressionQuality($quality);
-            $imagick->thumbnailImage((int) $newHeight, (int) $newWidth, false, false);
-
-            $fileName = 'thumb_' . $currentTimestamp . '.jpg';
-
-            try {
-                Storage::disk($storageType)->put($fileName, $imagick);
-            } catch (Exception $e) {
-                throw new Exception($e->getMessage());
-            }
-
-            return new File([
-                'storage' => $storageType,
-                'name' => $fileName,
-                'origin_name' => $oryginalName,
-            ]);
-        }
-
-        throw new Exception("No valid image provided with {$image}.");
     }
 
     public function update(int $id, array $data = [])
