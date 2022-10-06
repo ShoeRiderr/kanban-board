@@ -1,9 +1,9 @@
 <template>
     <div class="pb-3 d-flex">
         <avatar-item-component avatar-class="round avatar-minature lg" :user="comment.user" />
-        <div class="pl-1 w-100">
+        <div class="ps-1 w-100">
             <span class="align-self-center dark-color">
-                <b>{{ comment.user.fullname }}</b>
+                <b>{{ comment.user.name }}</b>
                 <small class="text-muted">{{ convertDate(comment.created_at) }}</small>
             </span>
             <comment-form

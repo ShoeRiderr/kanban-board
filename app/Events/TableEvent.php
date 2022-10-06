@@ -14,9 +14,7 @@ class TableEvent extends Event implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /** @var TableResource */
-    public $table;
-    
+    public TableResource $table;
 
     /**
      * Create a new event instance.

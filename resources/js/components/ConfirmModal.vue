@@ -7,8 +7,8 @@
           <slot></slot>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary btn-ok" data-dismiss="modal" @click="onSave">Yes</a>
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary btn-ok" data-bs-dismiss="modal" @click="onSave">Yes</a>
         </div>
       </div>
     </div>

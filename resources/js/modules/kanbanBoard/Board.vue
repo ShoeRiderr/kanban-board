@@ -1,74 +1,33 @@
 <template>
-  <div>
+  <div class="horizontal-scrollable">
     <notifications group="alert" position="bottom right" />
     <div class="d-flex">
-      <div
-        data-bs-toggle="modal"
-        data-bs-target="#tableModal"
-        class="d-flex flex-row align-items-center pointer"
-      >
+      <div data-bs-toggle="modal" data-bs-target="#tableModal" class="d-flex flex-row align-items-center pointer">
         <h2 class="m-0 dark-color">
           {{ kanbanBoardStore?.table?.name }}
         </h2>
-        <i class="feather icon-edit ml-1"></i>
+        <i class="feather icon-edit ms-1"></i>
       </div>
-      <div class="ml-2 d-flex">
-        <avatar-item-component
-          v-for="(user, index) in kanbanBoardStore.table.users"
-          :key="index"
-          :user="user"
-        />
+      <div class="ms-2 d-flex">
+        <avatar-item-component v-for="(user, index) in kanbanBoardStore.table.users" :key="index" :user="user" />
       </div>
     </div>
-    <draggable
-      class="row flex-row flex-sm-nowrap py-3"
-      :list="kanbanBoardStore.table.columns"
-      :animation="200"
-      @change="changeColumnOrder"
-      draggable=".column"
-      ghost-class="ghost-card"
-      group="columns"
-    >
-      <column-component
-        v-for="(column, index) in kanbanBoardStore.table.columns"
-        :key="index"
-        class="column"
-        :auth-user="authUser"
-        :column="column"
-        :users="users"
-        :projects="projects"
-        :column-modal-id="columnModalId"
-        @addTask="addTask"
-        @archiveTask="archiveTask"
-        @showEditColumnModal="showEditColumnModal"
-        @archiveColumn="archiveColumn"
-        @addComment="addComment"
-        @editComment="editComment"
-        @deleteComment="deleteComment"
-        @changeTaskOrder="changeTaskOrder"
-        @addCollaborators="addCollaborators"
-      />
+    <draggable class="row flex-row flex-sm-nowrap py-3" :list="kanbanBoardStore.table.columns" :animation="200"
+      @change="changeColumnOrder" draggable=".column" ghost-class="ghost-card" group="columns">
+      <column-component v-for="(column, index) in kanbanBoardStore.table.columns" :key="index" class="column"
+        :auth-user="authUser" :column="column" :users="users" :projects="projects" :column-modal-id="columnModalId"
+        @addTask="addTask" @archiveTask="archiveTask" @showEditColumnModal="showEditColumnModal"
+        @archiveColumn="archiveColumn" @addComment="addComment" @editComment="editComment"
+        @deleteComment="deleteComment" @changeTaskOrder="changeTaskOrder" @addCollaborators="addCollaborators" />
       <div class="col-sm-6 col-md-4 col-xl-3">
         <div class="column-body">
-          <h5
-            class="dark-color add-button pointer"
-            data-bs-toggle="modal"
-            :data-bs-target="`#${columnModalId}`"
-          >
+          <h5 class="dark-color add-button pointer" data-bs-toggle="modal" :data-bs-target="`#${columnModalId}`">
             + Add column
           </h5>
         </div>
-        <column-modals-component
-          :id="columnModalId"
-          :column="columnToEdit"
-          @onSubmit="onSubmitColumnManage"
-        />
-        <table-modals-component
-          :id="'tableModal'"
-          :modal-title="'Edit table'"
-          :table="kanbanBoardStore.table"
-          @onSubmit="editTable"
-        />
+        <column-modals-component :id="columnModalId" :column="columnToEdit" @onSubmit="onSubmitColumnManage" />
+        <table-modals-component :id="'tableModal'" :modal-title="'Edit table'" :table="kanbanBoardStore.table"
+          @onSubmit="editTable" />
       </div>
     </draggable>
   </div>
@@ -142,7 +101,7 @@ export default {
 
     getProjects() {
       api.project.getOngoingProjects().then((response) => {
-        this.projects = response.data;
+        this.projects = response.data.data;
       });
     },
 
@@ -191,7 +150,7 @@ export default {
       api.user
         .all()
         .then((response) => {
-          this.users = response.data;
+          this.users = response.data.data;
         })
         .catch((error) => {
           this.$notify({

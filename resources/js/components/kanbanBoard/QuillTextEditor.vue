@@ -1,59 +1,59 @@
 <template>
-  <quill-editor
-    ref="quill"
-    v-model="value"
-    :options="editorOption"
-    @ready="onFocus($event)"
-    v-click-outside="onClickOutside"
-  />
+    <quill-editor
+        ref="quill"
+        v-model="value"
+        :options="editorOption"
+        @ready="onFocus($event)"
+        v-click-outside="onClickOutside"
+    />
 </template>
 
 <script>
-import quillMixin from "@/mixins/quillMixin";
+import quillMixin from '@/mixins/quillMixin';
 
 export default {
-  mixins: [quillMixin],
+    mixins: [quillMixin],
 
-  props: {
-    description: {
-      type: String,
-      required: true,
+    props: {
+        description: {
+            type: String,
+            required: true,
+        },
+        isComment: {
+            type: Boolean,
+            default: false,
+        },
     },
-    isComment: {
-      type: Boolean,
-      default: false,
+
+    data() {
+        return {
+            value: this.description,
+            quillEvent: null,
+        };
     },
-  },
 
-  data() {
-    return {
-      value: this.description,
-      quillEvent: null,
-    };
-  },
+    mounted() {
+        if (this.isComment) {
+            const qlToolbar = this.$refs.quill.getToolbar();
+            qlToolbar.classList.add('d-flex');
 
-  mounted() {
-    if (this.isComment) {
-      let qlToolbar = this.$refs.quill.getToolbar();
-      qlToolbar.classList.add("d-flex");
+            let fileInput = document.createElement('input');
+            fileInput.setAttribute('type', 'file');
+            fileInput.setAttribute('multiple', true);
+            fileInput.setAttribute('ref', 'files');
+            fileInput.setAttribute('id', 'files');
+            fileInput.className = 'd-none';
+            fileInput.addEventListener('change', () => {
+                this.$emit('addAttachments', qlToolbar.querySelector('#files').files);
+            });
 
-      let fileInput = document.createElement("input");
-      fileInput.setAttribute("type", "file");
-      fileInput.setAttribute("multiple", true);
-      fileInput.setAttribute("ref", "files");
-      fileInput.setAttribute("id", "files");
-      fileInput.className = "d-none";
-      fileInput.addEventListener("change", () => {
-        this.$emit("addAttachments", document.querySelector("#files").files);
-      });
+            let attachment = document.createElement('span');
+            attachment.className = 'ql-formats';
+            attachment.appendChild(fileInput);
 
-      let attachment = document.createElement("span");
-      attachment.className = "ql-formats";
-      attachment.appendChild(fileInput);
+            let attachmentButton = document.createElement('button');
 
-      let attachmentButton = document.createElement("button");
-
-      attachmentButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"
+            attachmentButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"
                         width="16"
                         height="16"
                         fill="currentColor"
@@ -65,82 +65,82 @@ export default {
                         />
                       </svg>`;
 
-      attachmentButton.setAttribute("type", "button");
-      attachmentButton.addEventListener("click", () => {
-        document.querySelector("#files").click();
-      });
+            attachmentButton.setAttribute('type', 'button');
+            attachmentButton.addEventListener('click', () => {
+              qlToolbar.querySelector('#files').click();
+            });
 
-      attachment.appendChild(attachmentButton);
+            attachment.appendChild(attachmentButton);
 
-      qlToolbar.appendChild(attachment);
+            qlToolbar.appendChild(attachment);
 
-      let button = document.createElement("button");
-      button.innerText = "Comment";
-      button.className = "auto-width btn btn-sm btn-primary ml-auto";
+            let button = document.createElement('button');
+            button.innerText = 'Comment';
+            button.className = 'auto-width btn btn-primary bg-primary d-flex align-items-center ms-auto rounded';
 
-      button.setAttribute("type", button);
-      button.addEventListener("click", () => {
-        this.$emit("onSave", this.value);
-        this.value = "";
-      });
+            button.setAttribute('type', button);
+            button.addEventListener('click', () => {
+                this.$emit('onSave', this.value);
+                this.value = '';
+            });
 
-      qlToolbar.appendChild(button);
-    }
-  },
-
-  methods: {
-    onFocus(event) {
-      this.quillEvent = event;
-      event.focus();
-    },
-
-    onClickOutside() {
-      if (this.quillEvent && !this.quillEvent.hasFocus()) {
-        const quillFormContainer = this.quillEvent.container.parentNode.parentNode;
-
-        if (quillFormContainer.classList.contains("editor-form")) {
-          this.$emit("hideEditor", this.value);
+            qlToolbar.appendChild(button);
         }
-      }
     },
-  },
+
+    methods: {
+        onFocus(event) {
+            this.quillEvent = event;
+            event.focus();
+        },
+
+        onClickOutside() {
+            if (this.quillEvent && !this.quillEvent.hasFocus()) {
+                const quillFormContainer = this.quillEvent.container.parentNode.parentNode;
+
+                if (quillFormContainer.classList.contains('editor-form')) {
+                    this.$emit('hideEditor', this.value);
+                }
+            }
+        },
+    },
 };
 </script>
 
 <style lang="scss">
 .quill-editor {
-  display: flex;
-  flex-direction: column-reverse;
-  border: 1px solid #ccc;
-  background-color: white;
+    display: flex;
+    flex-direction: column-reverse;
+    border: 1px solid #ccc;
+    background-color: white;
 
-  > .ql-toolbar {
-    border: none;
-    border-radius: 0;
-    background-color: inherit;
+    > .ql-toolbar {
+        border: none;
+        border-radius: 0;
+        background-color: inherit;
 
-    > .ql-formats {
-      > button {
-        height: 20px;
-        width: 22px;
-      }
+        > .ql-formats {
+            > button {
+                height: 20px;
+                width: 22px;
+            }
+        }
     }
-  }
 
-  > .ql-container {
-    border: none;
-    border-radius: 0;
-    background-color: inherit;
-    transition: max-height 0.2s ease-out;
+    > .ql-container {
+        border: none;
+        border-radius: 0;
+        background-color: inherit;
+        transition: max-height 0.2s ease-out;
 
-    > .ql-editor {
-      height: auto;
-      max-height: 80px;
+        > .ql-editor {
+            height: auto;
+            max-height: 80px;
+        }
     }
-  }
 }
 
 .auto-width {
-  width: auto !important;
+    width: auto !important;
 }
 </style>

@@ -9,7 +9,7 @@
           />
         </svg>
       </div>
-      <span class="pl-1 text-nowrap dark-color">
+      <span class="ps-1 text-nowrap dark-color">
         <small>{{ file.origin_name }}</small>
       </span>
     </div>

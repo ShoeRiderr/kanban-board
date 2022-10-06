@@ -19,7 +19,6 @@ class TableResource extends JsonResource
             'name' => $this->name,
 
             'columns' => ColumnResource::collection($this->columns),
-            'users' => UserResource::collection($this->users),
         ];
     }
 }

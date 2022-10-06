@@ -1,11 +1,7 @@
 <template>
-  <div
-    :class="avatarClass"
-    class="dark-color d-flex align-items-center justify-content-center pointer"
-    :style="`background-image:url(${avatarImage})`"
-  >
+  <div :class="avatarClass" class="dark-color d-flex align-items-center justify-content-center pointer">
     <small>
-      <b v-if="!avatarImage">
+      <b>
         {{ user.initials }}
       </b>
     </small>
@@ -23,16 +19,6 @@ export default {
     avatarClass: {
       type: String,
       default: 'circle-button dotted-border',
-    },
-  },
-
-  computed: {
-    avatarImage() {
-      if (this.user.image !== null) {
-        return 'http://' + window.location.host + '/storage/' + this.user.image.name;
-      }
-
-      return '';
     },
   },
 };

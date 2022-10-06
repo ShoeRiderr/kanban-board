@@ -10,7 +10,7 @@
       <div v-if="dueDate.value" class="margin-left d-flex align-items-center">
         <span>{{ dueDate.value }}</span>
       </div>
-      <span v-else class="ml-1">
+      <span v-else class="ms-1">
         <small>No due date</small>
       </span>
     </div>

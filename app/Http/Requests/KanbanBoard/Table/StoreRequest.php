@@ -25,8 +25,6 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => ['required'],
-            'users' => ['sometimes', 'array'],
-            'users.*' => ['required', 'exists:users,id'],
         ];
     }
 }

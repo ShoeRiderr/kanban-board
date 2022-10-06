@@ -1,14 +1,8 @@
 <template>
-    <div>
-        <b class="dark-color pt-1 pr-1 pointer" @click="onShowForm"> Client </b>
-        <div class="mt-1">
-            <comment-form @addComment="addComment" @onClose="onShowForm" :users="users" />
-            <collaborators-form-component
-                :collaborators="collaborators"
-                :users="users"
-                @addCollaborators="addCollaborators"
-            />
-        </div>
+    <div class="mt-1 px-4">
+        <comment-form @addComment="addComment" @onClose="onShowForm" :users="users" />
+        <collaborators-form-component :collaborators="collaborators" :users="users"
+            @addCollaborators="addCollaborators" />
     </div>
 </template>
 
@@ -23,10 +17,6 @@ export default {
     },
 
     props: {
-        isPrivate: {
-            type: Boolean,
-            required: true,
-        },
         collaborators: {
             type: Array,
             required: true,

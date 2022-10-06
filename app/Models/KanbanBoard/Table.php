@@ -20,9 +20,4 @@ class Table extends Model
     {
         return $this->hasMany(Column::class)->orderBy('order');
     }
-
-    public function users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class);
-    }
 }

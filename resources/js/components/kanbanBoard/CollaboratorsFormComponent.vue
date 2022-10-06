@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex align-items-center">
-    <small class="text-muted mr-1">Collaborators:</small>
+    <small class="text-muted me-1">Collaborators:</small>
     <avatar-item-component
       v-if="!showInput"
       v-for="(collaborator, index) in collaborators"

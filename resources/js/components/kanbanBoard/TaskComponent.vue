@@ -28,7 +28,7 @@
           {{ task.name }}
         </span>
         <div class="d-flex align-items-center mt-1">
-          <small v-if="dueDate.value" class="mr-1">
+          <small v-if="dueDate.value" class="me-1">
             <due-date-component :due-date="dueDate" />
           </small>
           <avatar-item-component
@@ -50,8 +50,6 @@
       @editComment="editComment"
       @deleteComment="deleteComment"
       @addCollaborators="addCollaborators"
-      @startTask="startTask"
-      @stopTask="stopTask"
     />
   </div>
 </template>
@@ -106,21 +104,6 @@ export default {
       url.searchParams.set("task", this.task.id);
 
       window.history.replaceState(null, null, url);
-    },
-
-    startTask() {
-      const { id, name, project, tags } = this.task;
-
-      this.$emit("startTask", {
-        id,
-        project_id: project ? project.id : "",
-        tags_ids: tags.map((tag) => tag.id),
-        description: name,
-      });
-    },
-
-    stopTask() {
-      this.$emit("stopTask", this.task.ongoing_time_entry.id);
     },
 
     archiveTask(id) {

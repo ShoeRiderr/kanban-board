@@ -37,7 +37,7 @@ class TaskController extends Controller
 
     public function changeOrder(ChangeOrderRequest $request): JsonResponse
     {
-        $this->columnService->changeOrder($request->get('columns'));
+        $this->taskService->changeOrder($request->get('tasks'));
 
         return response()->json(['status' => true], JsonResponse::HTTP_OK);
     }

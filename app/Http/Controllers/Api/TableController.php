@@ -7,16 +7,11 @@ use App\Http\Requests\KanbanBoard\Table\StoreRequest;
 use App\Http\Requests\KanbanBoard\Table\UpdateRequest;
 use App\Http\Resources\TableResource;
 use App\Models\KanbanBoard\Table;
-use App\Services\TableService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TableController extends Controller
 {
-    public function __construct(private TableService $tableService)
-    {
-    }
-
     public function index(): JsonResource
     {
         return TableResource::collection(Table::all());
@@ -26,7 +21,7 @@ class TableController extends Controller
     {
         $data = array_merge($request->validated(), ['order' => 9999]);
 
-        return TableResource::make($this->tableService->create($data));
+        return TableResource::make(Table::create($data));
     }
 
     public function show(Table $table): JsonResource
@@ -36,7 +31,9 @@ class TableController extends Controller
 
     public function update(UpdateRequest $request, Table $table): JsonResource
     {
-        return TableResource::make($this->tableService->update($table, $request->validated()));
+        $table->update($request->validated());
+
+        return TableResource::make($table);
     }
 
     public function archive(Table $table): JsonResponse

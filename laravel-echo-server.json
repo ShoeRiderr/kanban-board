@@ -1,5 +1,5 @@
 {
-    "name": "esteem-echo-server",
+    "name": "kanban-echo-server",
     "script": "laravel-echo-server",
     "args": "start",
     "authEndpoint": "/broadcasting/auth",
@@ -25,7 +25,7 @@
         "redis": true
     },
     "apiOriginAllow": {
-        "allowCors": false,
+        "allowCors": true,
         "allowOrigin": "",
         "allowMethods": "",
         "allowHeaders": ""

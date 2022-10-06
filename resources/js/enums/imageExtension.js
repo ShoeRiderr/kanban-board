@@ -5,6 +5,7 @@ export const ImageExtension = Object.freeze({
   JPEG: 'jpeg',
   TIF: 'tif',
   WEBP: 'webp',
+  SVG: 'svg',
 });
 
 export const getAll = () => {

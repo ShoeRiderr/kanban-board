@@ -7,4 +7,10 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
+@import 'typhography';
+
 @import 'kanbanBoard';
+
+.horizontal-scrollable {
+    overflow-x: auto;
+}

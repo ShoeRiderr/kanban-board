@@ -6,7 +6,7 @@
         <h5>Create new table</h5>
       </div>
       <div class="card-body">
-        <div class="kanban-tables-container ml-1">
+        <div class="kanban-tables-container ms-1">
           <a
             v-for="(table, index) in workspaceTablesStore?.tables"
             :href="`/kanban-board/table/${table.id}`"
@@ -18,7 +18,7 @@
           <a
             data-bs-toggle="modal"
             data-bs-target="#tableModal"
-            class="kanban-tables-item text-decoration-none text-reset text-center border"
+            class="font-4xl kanban-tables-item text-decoration-none text-reset text-center border"
           >
             +
           </a>

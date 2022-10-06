@@ -11,12 +11,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <div v-if="task" class="d-flex align-items-center w-100">
-              <div v-if="task.task_prefix" class="p-1">
-                <span>
-                  <b>{{ task.task_prefix }}</b>
-                </span>
-              </div>
-              <div class="ml-auto">
+              <div class="ms-auto">
                 <i
                   class="fa fa-ellipsis-v pointer p-1"
                   id="dropdownMenuColumn"
@@ -41,7 +36,7 @@
               <div class="pb-1">
                 <h2
                   v-if="!showNameInput"
-                  class="pr-5 pointer dark-color task-title-text"
+                  class="pe-5 pointer dark-color task-title-text"
                   @click="onShowNameInput(true)"
                 >
                   {{ task.name }}
@@ -70,7 +65,7 @@
                   >
                     <div v-if="task.user" class="d-flex align-items-center">
                       <avatar-item-component :user="task.user" />
-                      <span class="ml-1">{{ task.user.name }}</span>
+                      <span class="ms-1">{{ task.user.name }}</span>
                     </div>
                     <div v-else class="d-flex align-items-center text-secondary assign">
                       <div
@@ -78,7 +73,7 @@
                       >
                         <i class="far fa-user"></i>
                       </div>
-                      <span class="ml-1">
+                      <span class="ms-1">
                         <small>No assignee</small>
                       </span>
                     </div>
@@ -141,7 +136,7 @@
                       >
                         <i class="feather icon-layers"></i>
                       </div>
-                      <span class="ml-1">
+                      <span class="ms-1">
                         <small>No project assigned</small>
                       </span>
                     </div>
@@ -190,12 +185,12 @@
                       >
                         <i class="feather icon-hash"></i>
                       </div>
-                      <span class="ml-1">
+                      <span class="ms-1">
                         <small>No tags assigned</small>
                       </span>
                     </div>
                   </span>
-                  <multiselect
+                  <!-- <multiselect
                     v-show="showTagInput"
                     v-model="taskForm.tags"
                     @close="assignTags"
@@ -218,7 +213,7 @@
                         {{ values.length }} options selected
                       </span>
                     </template>
-                  </multiselect>
+                  </multiselect> -->
                 </div>
               </div>
               <div class="row pb-1">
@@ -228,7 +223,7 @@
                 <div class="col-8">
                   <span
                     v-if="!showEstimationInput"
-                    class="pr-5 pointer"
+                    class="pe-5 pointer"
                     @click="onShowEstimationInput(true)"
                   >
                     {{ taskForm.estimation }}
@@ -276,7 +271,7 @@
                 <div class="col-8 editor-form">
                   <span
                     v-if="!showDescriptionInput"
-                    class="pr-5 pointer"
+                    class="pe-5 pointer"
                     @click="onShowDescriptionInput(true)"
                   >
                     <div v-if="hasDescription">
@@ -319,16 +314,6 @@
             </div>
             <div class="pt-2 sticky bottom comment-form-grid pb-1">
               <new-comment-component
-                class="comment-form-item--left"
-                :is-private="false"
-                :collaborators="task.collaborators"
-                :users="users"
-                @addComment="addComment"
-                @addCollaborators="addCollaborators"
-              />
-              <new-comment-component
-                class="comment-form-item--right"
-                :is-private="true"
                 :collaborators="task.collaborators"
                 :users="users"
                 @addComment="addComment"
@@ -553,7 +538,6 @@ export default {
     },
 
     editDescription(event) {
-      console.log(event);
       this.onShowDescriptionInput(false);
 
       if (event && this.task.description !== event) {
@@ -617,14 +601,6 @@ export default {
         task_id: this.taskForm.id,
         collaborators: event,
       });
-    },
-
-    startTask() {
-      this.$emit("startTask");
-    },
-
-    stopTask() {
-      this.$emit("stopTask");
     },
 
     onShowNameInput(value) {

@@ -1,11 +1,11 @@
 <template>
-  <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div ref="modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div :class="addModalLargeClass" class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{ modalTitle }}</h5>
         </div>
-        <div :class="modalBodyExtraClasses" class="modal-body">
+        <div :class="modalBodyExtraClasses" class="modal-body pb-4">
           <slot></slot>
         </div>
         <div v-if="showFooter" class="modal-footer">
@@ -68,7 +68,7 @@ export default {
       this.$emit("onSave");
     },
     closeModal() {
-      document.getElementsByClassName("modal")[0].classList.remove("show");
+      this.$refs.modal.classList.remove("show");
       document.getElementsByClassName("modal-backdrop")[0].classList.remove("show");
     },
   },

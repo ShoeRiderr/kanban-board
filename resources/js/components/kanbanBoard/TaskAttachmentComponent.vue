@@ -10,7 +10,7 @@
                 </h4>
             </div>
         </div>
-        <div class="pl-1">
+        <div class="ps-1">
             <span data-attachment="true">{{ file.origin_name }}</span>
             <p class="text-muted">
                 <small>

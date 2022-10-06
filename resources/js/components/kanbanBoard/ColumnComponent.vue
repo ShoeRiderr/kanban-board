@@ -6,9 +6,9 @@
           <h6 class="card-title dark-color text-uppercase text-truncate">
             {{ column.name }}
           </h6>
-          <div class="ml-auto">
+          <div class="ms-auto">
             <i
-              class="fa fa-ellipsis-v pl-1 pointer"
+              class="fa fa-ellipsis-v ps-1 pointer"
               id="dropdownMenuColumn"
               data-bs-toggle="dropdown"
               aria-haspopup="true"
@@ -54,8 +54,6 @@
               @addComment="addComment"
               @editComment="editComment"
               @deleteComment="deleteComment"
-              @startTask="startTask"
-              @stopTask="stopTask"
               @addCollaborators="addCollaborators"
             />
             <div class="d-flex justify-content-center">
@@ -134,14 +132,6 @@ export default {
   methods: {
     changeTaskOrder() {
       this.$emit("changeTaskOrder", this.column.id);
-    },
-
-    startTask(event) {
-      this.$emit("startTask", event);
-    },
-
-    stopTask(event) {
-      this.$emit("stopTask", event);
     },
 
     addTask() {
