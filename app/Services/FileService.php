@@ -35,40 +35,37 @@ class FileService
         }
     }
 
-    public function update(int $id, array $data = [])
+    public function update(File $file, array $data = []): bool
     {
-        $file = $this->model->find($id);
         $result = $file->update($data);
 
-        if ($file->fileable_type === Comment::class) {
-            $comment = Comment::find($file->fileable_id);
-
-            TableEvent::dispatch(TableResource::make($comment->task->column->table));
-        }
+        $this->checkFileOwner($file);
 
         return $result;
     }
 
-    public function delete(int $id)
+    public function delete(File $file): bool
     {
-        $file = $this->model->find($id);
-
         Storage::disk($file->storage)->delete($file->name);
 
         $result = $file->forceDelete();
 
-        if ($file->fileable_type === Comment::class) {
-            $comment = Comment::find($file->fileable_id);
-
-            TableEvent::dispatch(TableResource::make($comment->task->column->table));
-        }
-
-        if ($file->fileable_type === Task::class) {
-            $task = Task::find($file->fileable_id);
-
-            TableEvent::dispatch(TableResource::make($task->column->table));
-        }
+        $this->checkFileOwner($file);
 
         return $result;
+    }
+
+    private function checkFileOwner(File $file): void
+    {
+        if (in_array($file->fileable_type, [Comment::class, Task::class])) {
+            switch ($file->fileable_type) {
+                case Comment::class:
+                    TableEvent::dispatch(TableResource::make($file->fileable->task->column->table));
+                    break;
+                case Task::class:
+                    TableEvent::dispatch(TableResource::make($file->fileable->column->table));
+                    break;
+            }
+        }
     }
 }

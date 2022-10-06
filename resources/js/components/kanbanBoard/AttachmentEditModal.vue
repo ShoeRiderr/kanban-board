@@ -4,7 +4,7 @@
       <div class="d-flex justify-content-center">Edit attachment</div>
       <hr />
       <div class="p-1">
-        <div class="form-group">
+        <div class="form-group pb-2">
           <label :for="`origin_name_${file.id}`" class="form-label">Link name</label>
           <input class="form-control" type="text" :id="`origin_name_${file.id}`" v-model="form.origin_name" />
         </div>

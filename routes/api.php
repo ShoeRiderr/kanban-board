@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\ColumnController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\TableController;
 use App\Http\Controllers\Api\TagController;
@@ -30,6 +31,9 @@ Route::apiResource('clients', ClientController::class);
 Route::apiResource('projects', ProjectController::class);
 Route::apiResource('tags', TagController::class);
 Route::apiResource('users', UserController::class);
+Route::apiResource('files', FileController::class, [
+    'only' => ['update', 'destroy'],
+]);
 
 Route::prefix('kanban-board')->group(function () {
     Route::apiResource('tables', TableController::class);
