@@ -91,11 +91,10 @@ export default {
 
   methods: {
     editTable(event) {
-      const { id, name, users } = event;
+      const { id, name } = event;
 
       api.kanbanBoard.table.update(id, {
         name,
-        users: users.map((user) => user.id),
       });
     },
 
